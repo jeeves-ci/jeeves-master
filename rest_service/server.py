@@ -10,10 +10,12 @@ from jeeves_commons.constants import (DEFAULT_REST_PORT,
                                       RABBITMQ_HOST_IP_ENV,
                                       RABBITMQ_HOST_PORT_ENV,
                                       MINION_TASKS_QUEUE,
-                                      DEFAULT_BROKER_PORT)
+                                      DEFAULT_BROKER_PORT,
+                                      DEFAULT_WEBUI_PORT)
 from jeeves_commons.utils import open_channel
 
 from rest_service import config
+from web_ui.web_server import LogStreamHttpServer
 from rest_service.resources.tasks import Tasks
 from rest_service.resources.workflows import Workflows
 from rest_service.resources.workflow import Workflow
@@ -60,7 +62,7 @@ app.api.add_resource(Tasks,
                      '/api/v1.0/tasks',
                      endpoint='api/v1.0/tasks',
                      defaults={'workflow_id': None,
-                               'status': True}
+                               'status': None}
                      )
 
 # app.api.add_resource(Minion,
@@ -83,6 +85,12 @@ class ServerBootstrapper(object):
                                    durable=True)
 
     def start(self):
+        # Start Web-UI.
+        # TODO: This needs to be ran as a separate process.
+        web_ui = LogStreamHttpServer()
+        web_ui.start(DEFAULT_WEBUI_PORT)
+
+        # Start RESTful service
         app.run(host='0.0.0.0', port=REST_PORT)
 
 
