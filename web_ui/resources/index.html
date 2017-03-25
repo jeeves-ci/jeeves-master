@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>tornado WebSocket example</title>
+    <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <script type="text/javascript" src="static/script.js"></script>
+</head>
+<body>
+<div class="container">
+    <h1>Jeeves Tasks Log View</h1>
+    <hr>
+
+    <div class="workflow_cont">
+        <ul class="workflow_list"></ul>
+    </div>
+    <div class="taskTab_cont">
+        <ul class="nav nav-tabs taskTabList_cont"></ul>
+    </div>
+
+    WebSocket status : <span id="message"></span>
+    <hr>
+    <pre>
+      <div id="content">
+      </div>
+    </pre>
+</div>
+<script>
+//    var ws = new WebSocket('ws://localhost:7778/tail/9d4e49b3-256f-4326-86e2-94026c7fbb0d');
+//    var $message = $('#message');
+//    var $content = $('#content');
+//    ws.onopen = function(){
+//        $message.attr("class", 'label label-success');
+//        $message.text('open');
+//    };
+//    ws.onmessage = function(ev){
+//        $message.attr("class", 'label label-info');
+//        $message.hide();
+//        $message.fadeIn("fast");
+//        $message.text('received message');
+//        console.log(ev.data);
+//        $content.append(ev.data);
+//    };
+//    ws.onclose = function(ev){
+//        $message.attr("class", 'label label-important');
+//        $message.text('closed');
+//    };
+//    ws.onerror = function(ev){
+//        $message.attr("class", 'label label-warning');
+//        $message.text('error occurred');
+//    };
+</script>
+</body>
+</html>

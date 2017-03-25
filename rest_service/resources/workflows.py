@@ -17,4 +17,5 @@ class Workflows(Resource):
     @with_params
     @marshal_with(responses.Workflow.response_fields)
     def get(self, status=None, **kwargs):
-        return get_storage_client().workflows.list(status=status)
+        return get_storage_client().workflows.list(status=status), 200, \
+               {'Access-Control-Allow-Origin': '*'}
