@@ -8,6 +8,9 @@ setup(
     author='adaml',
     author_email='adam.lavie@gmail.com',
     packages=[
+        'web_ui',
+        'web_ui.resources',
+        'web_ui.resources.static',
         'rest_service',
         'rest_service.resources',
     ],
@@ -21,6 +24,13 @@ setup(
         'flask-restful-swagger==0.12',
         'sqlalchemy==1.1.5',
         'pyyaml>=3.12',
-        'psycopg2==2.7.1'
-    ]
+        'psycopg2==2.7.1',
+        'tornado==4.2',
+        'websocket-client==0.40.0'
+    ],
+    package_data={
+        'web_ui': ['resources/*.html'],
+        'web_ui.resources': ['static/*.js'],
+    },
+    include_package_data=True,
 )
