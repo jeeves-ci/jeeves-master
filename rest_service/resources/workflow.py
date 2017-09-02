@@ -34,6 +34,10 @@ class Workflow(Resource):
         workflow = data['workflow']
         env = data.get('env', '{}')
         try:
+            env = json.loads(env)
+        except ValueError:
+            raise JeevesServerError("Workflow env must contain a valid JSON file.", 400)
+        try:
             validate_workflow(workflow)
         except ValidationError as e:
             raise JeevesServerError(e.message)
