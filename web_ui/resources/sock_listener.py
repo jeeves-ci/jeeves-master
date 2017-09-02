@@ -3,7 +3,7 @@ import sys
 import websocket
 
 socket_path = sys.argv[1]
-print socket_path
+# print socket_path
 
 
 def write_to_stdout(ws, data):
