@@ -29,18 +29,17 @@ class Workflow(Resource):
         # Raise if workflow with id already exists
         elif storage_client.workflows.get(workflow_id):
             raise WorkflowAlreadyExists('Workflow with ID \'{}\' already '
-                                        'exists.')
+                                        'exists.', 400)
         data = json.loads(request.data)
         workflow = data['workflow']
-        env = data.get('env', '{}')
-#         try:
-#             env = json.loads(env)
-#         except ValueError:
-#             raise JeevesServerError("Workflow env must contain a valid JSON file.", 400)
+        env = data.get('env', {})
+        # Assert env type is dict
+        if type(env) is not dict:
+            raise JeevesServerError("Workflow env must contain a valid JSON file.", 400)
         try:
             validate_workflow(workflow)
         except ValidationError as e:
-            raise JeevesServerError(e.message)
+            raise JeevesServerError(e.message, 400)
 
         # Create workflow and workflow tasks.
         workflow, tasks = storage_utils.create_workflow(storage_client,
