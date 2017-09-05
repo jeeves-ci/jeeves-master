@@ -1,5 +1,5 @@
 import os
-from flask import Flask
+from flask import Flask, jsonify
 from flask_restful import Api
 
 from jeeves_commons.storage.database import init_db
@@ -20,6 +20,7 @@ from rest_service.resources.tasks import Tasks
 from rest_service.resources.workflows import Workflows
 from rest_service.resources.workflow import Workflow
 from rest_service.resources.task import Task
+from rest_service.exceptions import JeevesServerError
 
 
 REST_PORT = os.environ.get(MASTER_HOST_PORT_ENV, DEFAULT_REST_PORT)
@@ -42,6 +43,13 @@ class JeevesFlask(Flask):
 
 
 app = JeevesFlask()
+
+
+@app.errorhandler(JeevesServerError)
+def handle_invalid_usage(error):
+    response = jsonify(error.to_dict())
+    response.status_code = error.status_code
+    return response
 
 
 app.api.add_resource(Workflow,
@@ -71,6 +79,7 @@ app.api.add_resource(Tasks,
 # app.api.add_resource(Minions,
 #                      '/api/v1.0/minions',
 #                      '/api/v1.0/minions')
+app.api.init_app(app)
 
 
 class ServerBootstrapper(object):
@@ -85,6 +94,7 @@ class ServerBootstrapper(object):
                                    durable=True)
 
     def start(self):
+        global app
         # Start Web-UI.
         # TODO: This needs to be ran as a separate process.
         web_ui = LogStreamHttpServer()
