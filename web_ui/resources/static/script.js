@@ -1,5 +1,6 @@
 $( document ).ready(function() {
     console.log("ready!");
+    var activeSocket = new socketDetails();
     var url = window.location.href;
     var arr_url = url.split("/");
     var webUiPublicIp = arr_url[2];
@@ -11,6 +12,21 @@ $( document ).ready(function() {
         url,
         success: onWorkflowsListRecieve
     });
+
+    function socketDetails(socket, taskID) {
+        this.socket = socket;
+        this.taskID = taskID;
+        this.isActive = function (taskID) {
+            return this.socket && this.taskID == taskID;
+        };
+        this.close = function () {
+            if (this.socket) {
+                this.socket.close();
+                this.socket = null;
+                this.taskID = '';
+            }
+        };
+    }
 
     function onWorkflowsListRecieve(data) {
         var workflowCont = $('.workflow_list');
@@ -58,7 +74,14 @@ $( document ).ready(function() {
         var target = event.target,
             taskId = $(target).attr('taskId');
 
-        openSocket(taskId);
+        // Socket will be closed on window exit or on
+        // switching to different task.
+        if (activeSocket.isActive(taskId)) {
+            return;
+        } else {
+            activeSocket.close();
+        }
+        activeSocket = openSocket(taskId);
     }
 
     function openSocket(taskId){
@@ -86,5 +109,6 @@ $( document ).ready(function() {
             $message.attr("class", 'label label-warning');
             $message.text('error occurred');
         };
+        return new socketDetails(ws, taskId);
     }
 });
