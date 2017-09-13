@@ -58,4 +58,5 @@ class Workflow(object):
         'status': fields.String,
         'workflow_id': fields.String,
         'started_at': fields.String,
+        'ended_at': fields.String,
     }
