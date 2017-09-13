@@ -7,7 +7,9 @@ socket_path = sys.argv[1]
 
 
 def write_to_stdout(ws, data):
-    os.system('echo \'{data}\''.format(data=data))
+    # Escape special char ' with '\''
+    data = data.replace("'", "'\\''")
+    os.system("echo '{data}'".format(data=data))
 
 
 def on_error(ws, error):

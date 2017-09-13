@@ -22,8 +22,8 @@ $( document ).ready(function() {
         this.close = function () {
             if (this.socket) {
                 this.socket.close();
-                this.socket = null;
-                this.taskID = '';
+                this.socket = undefined;
+                this.taskID = undefined;
             }
         };
     }
