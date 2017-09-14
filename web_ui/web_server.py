@@ -79,8 +79,8 @@ class SocketHandler(tornado.websocket.WebSocketHandler):
             [which('python'), SOCKET_TAIL_SCRIPT, sock_path],
             stdout=Subprocess.STREAM,
             bufsize=1)
-        tail_proc.set_exit_callback(self.on_close)
         self._add_proc(tail_proc)
+        tail_proc.set_exit_callback(self.on_close)
         tail_proc.stdout.read_until('\n', self.write_line_to_clients)
 
     def on_close(self, *args, **kwargs):

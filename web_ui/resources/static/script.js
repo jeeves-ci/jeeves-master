@@ -1,5 +1,5 @@
 $( document ).ready(function() {
-    console.log("ready!");
+//    console.log("ready!");
     var activeSocket = new socketDetails();
     var url = window.location.href;
     var arr_url = url.split("/");
@@ -98,7 +98,7 @@ $( document ).ready(function() {
             $message.hide();
             $message.fadeIn("fast");
             $message.text('received message');
-            console.log(ev.data);
+//            console.log(ev.data);
             $content.append(ev.data);
         };
         ws.onclose = function(ev){
