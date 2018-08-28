@@ -19,7 +19,7 @@ setup(
                 'on clean docker/vms environments across workers.',
     install_requires=[
         'pika>=0.10.0',
-        'flask>=0.12',
+        'flask==1.0',
         'flask-restful==0.2.5',
         'flask-restful-swagger==0.12',
         'sqlalchemy==1.1.5',
