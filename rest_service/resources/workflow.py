@@ -66,5 +66,5 @@ class Workflow(Resource):
         if workflow.status == 'REVOKED':
             raise JeevesServerError('Workflow {0} already revoked.',
                                     404)
-        publisher.revoke_workflow(workflow)
+        publisher.revoke_workflow_manually(workflow)
         return workflow, 200
