@@ -54,7 +54,7 @@ class Workflow(Resource):
             for task_item in tasks:
                 storage_client.tasks.update(task_item.task_id, status='QUEUED')
                 publisher.send_task_message(task_item.task_id)
-
+            storage_client.commit()
         return workflow, 201
 
     @with_params
