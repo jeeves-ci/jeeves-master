@@ -1,0 +1,64 @@
+version: '3.0'
+
+services:
+  jeeves-master:
+    restart: always
+    image: jeeves-master:master
+    expose:
+      - "8080"
+      - "7778"
+    build:
+      context: .
+    depends_on:
+      - "postgres-db"
+      - "rabbitmq-broker"
+    environment:
+      # blank values will lead to using default values
+      POSTGRES_HOST_PORT_ENV: ""
+      POSTGRES_USERNAME_ENV: ""
+      POSTGRES_PASSWORD_ENV: ""
+
+      RABBITMQ_HOST_PORT_ENV: ""
+      RABBITMQ_USERNAME_ENV: ""
+      RABBITMQ_PASSWORD_ENV: ""
+
+      POSTGRES_HOST_IP_ENV: postgres-db
+      RABBITMQ_HOST_IP_ENV: rabbitmq
+
+  jeeves-minion:
+    restart: always
+    image: jeeves-minion:master
+    build:
+      context: ./../jeeves-minion
+    depends_on:
+      - "jeeves-master"
+    environment:
+      # blank values will lead to using default values
+      POSTGRES_HOST_PORT_ENV: ""
+      POSTGRES_USERNAME_ENV: ""
+      POSTGRES_PASSWORD_ENV: ""
+
+      RABBITMQ_HOST_PORT_ENV: ""
+      RABBITMQ_USERNAME_ENV: ""
+      RABBITMQ_PASSWORD_ENV: ""
+
+      POSTGRES_HOST_IP_ENV: postgres-db
+      RABBITMQ_HOST_IP_ENV: rabbitmq
+
+  postgres-db:
+    restart: always
+    image: postgres:latest
+    expose:
+      - "5432"
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"
+
+  rabbitmq-broker:
+    restart: always
+    image: rabbitmq:latest
+    expose:
+      - "5672"
+    environment:
+      RABBITMQ_DEFAULT_USER: "guest"
+      RABBITMQ_DEFAULT_PASS: "guest"
