@@ -10,7 +10,7 @@ ENV RABBITMQ_PASSWORD_ENV ""
 
 RUN git clone https://github.com/jeeves-ci/jeeves-master.git \
     && cd jeeves-master \
-    && git checkout master \
+    && git checkout 0.1 \
     && pip install -r requirements.txt .
 
 # webui port

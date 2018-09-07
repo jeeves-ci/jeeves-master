@@ -3,7 +3,7 @@ version: '3.0'
 services:
   jeeves-master:
     restart: always
-    image: adamlavie/jeeves-master:master
+    image: adamlavie/jeeves-master:0.1
     networks:
       - jeeves-network
     expose:
@@ -28,7 +28,7 @@ services:
 
   jeeves-minion:
     restart: always
-    image: adamlavie/jeeves-minion:master
+    image: adamlavie/jeeves-minion:0.1
     build:
       context: ./../jeeves-minion
     networks:
