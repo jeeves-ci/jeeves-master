@@ -27,7 +27,7 @@ def wait():
     connected = wait_for_port(host=os.getenv(POSTGRES_HOST_IP_ENV,
                                              '172.17.0.2'),
                               port=postgres_port,
-                              duration=30)
+                              duration=60)
     if not connected:
         raise RuntimeError('failed waiting for postgres DB')
 
@@ -35,7 +35,7 @@ def wait():
     connected = wait_for_port(host=os.getenv(RABBITMQ_HOST_IP_ENV,
                                              '172.17.0.3'),
                               port=rabbitmq_port,
-                              duration=30)
+                              duration=60)
     if not connected:
         raise RuntimeError('failed waiting for rabbitmq broker')
 

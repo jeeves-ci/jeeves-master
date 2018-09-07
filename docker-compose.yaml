@@ -3,7 +3,9 @@ version: '3.0'
 services:
   jeeves-master:
     restart: always
-    image: jeeves-master:master
+    image: adamlavie/jeeves-master:master
+    networks:
+      - jeeves-network
     expose:
       - "8080"
       - "7778"
@@ -13,34 +15,34 @@ services:
       - "postgres-db"
       - "rabbitmq-broker"
     environment:
-      # blank values will lead to using default values
-      POSTGRES_HOST_PORT_ENV: ""
-      POSTGRES_USERNAME_ENV: ""
-      POSTGRES_PASSWORD_ENV: ""
+      POSTGRES_HOST_PORT_ENV: "5432"
+      POSTGRES_USERNAME_ENV: "postgres"
+      POSTGRES_PASSWORD_ENV: "postgres"
 
-      RABBITMQ_HOST_PORT_ENV: ""
-      RABBITMQ_USERNAME_ENV: ""
-      RABBITMQ_PASSWORD_ENV: ""
+      RABBITMQ_HOST_PORT_ENV: "5672"
+      RABBITMQ_USERNAME_ENV: "guest"
+      RABBITMQ_PASSWORD_ENV: "guest"
 
       POSTGRES_HOST_IP_ENV: postgres-db
       RABBITMQ_HOST_IP_ENV: rabbitmq-broker
 
   jeeves-minion:
     restart: always
-    image: jeeves-minion:master
+    image: adamlavie/jeeves-minion:master
     build:
       context: ./../jeeves-minion
+    networks:
+      - jeeves-network
     depends_on:
       - "jeeves-master"
     environment:
-      # blank values will lead to using default values
-      POSTGRES_HOST_PORT_ENV: ""
-      POSTGRES_USERNAME_ENV: ""
-      POSTGRES_PASSWORD_ENV: ""
+      POSTGRES_HOST_PORT_ENV: "5432"
+      POSTGRES_USERNAME_ENV: "postgres"
+      POSTGRES_PASSWORD_ENV: "postgres"
 
-      RABBITMQ_HOST_PORT_ENV: ""
-      RABBITMQ_USERNAME_ENV: ""
-      RABBITMQ_PASSWORD_ENV: ""
+      RABBITMQ_HOST_PORT_ENV: "5672"
+      RABBITMQ_USERNAME_ENV: "guest"
+      RABBITMQ_PASSWORD_ENV: "guest"
 
       POSTGRES_HOST_IP_ENV: postgres-db
       RABBITMQ_HOST_IP_ENV: rabbitmq-broker
@@ -48,6 +50,8 @@ services:
   postgres-db:
     restart: always
     image: postgres:latest
+    networks:
+      - jeeves-network
     expose:
       - "5432"
     environment:
@@ -57,8 +61,13 @@ services:
   rabbitmq-broker:
     restart: always
     image: rabbitmq:latest
+    networks:
+      - jeeves-network
     expose:
       - "5672"
     environment:
       RABBITMQ_DEFAULT_USER: "guest"
       RABBITMQ_DEFAULT_PASS: "guest"
+
+networks:
+  jeeves-network:
