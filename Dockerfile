@@ -1,12 +1,12 @@
 FROM "python:2.7"
 
-ENV POSTGRES_HOST_PORT_ENV=${UNSET}
-ENV POSTGRES_USERNAME_ENV=${UNSET}
-ENV POSTGRES_PASSWORD_ENV=${UNSET}
+ENV POSTGRES_HOST_PORT_ENV ""
+ENV POSTGRES_USERNAME_ENV ""
+ENV POSTGRES_PASSWORD_ENV ""
 
-ENV RABBITMQ_HOST_PORT_ENV=${UNSET}
-ENV RABBITMQ_USERNAME_ENV=${UNSET}
-ENV RABBITMQ_PASSWORD_ENV=${UNSET}
+ENV RABBITMQ_HOST_PORT_ENV ""
+ENV RABBITMQ_USERNAME_ENV ""
+ENV RABBITMQ_PASSWORD_ENV ""
 
 RUN git clone https://github.com/jeeves-ci/jeeves-master.git \
     && cd jeeves-master \
@@ -19,4 +19,4 @@ EXPOSE 7778
 EXPOSE 8080
 
 WORKDIR jeeves-master/
-CMD ["python", "-m", "rest_service", "rest_service/server.py"]
+CMD ["python", "rest_service/server.py"]

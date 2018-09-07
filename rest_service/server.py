@@ -1,6 +1,15 @@
 import os
+
 from flask import Flask, jsonify
 from flask_restful import Api
+
+from rest_service import config
+from rest_service.resources.tasks import Tasks
+from rest_service.resources.workflows import Workflows
+from rest_service.resources.workflow import Workflow
+from rest_service.resources.task import Task
+from rest_service.exceptions import JeevesServerError
+from web_ui.web_server import LogStreamHttpServer
 
 from jeeves_commons.storage.database import init_db
 from sqlalchemy import create_engine # noqa
@@ -14,13 +23,6 @@ from jeeves_commons.constants import (DEFAULT_REST_PORT,
                                       DEFAULT_WEBUI_PORT)
 from jeeves_commons.utils import open_channel
 
-from rest_service import config
-from web_ui.web_server import LogStreamHttpServer
-from rest_service.resources.tasks import Tasks
-from rest_service.resources.workflows import Workflows
-from rest_service.resources.workflow import Workflow
-from rest_service.resources.task import Task
-from rest_service.exceptions import JeevesServerError
 
 
 REST_PORT = os.environ.get(MASTER_HOST_PORT_ENV, DEFAULT_REST_PORT)

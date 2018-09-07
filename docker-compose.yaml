@@ -23,7 +23,7 @@ services:
       RABBITMQ_PASSWORD_ENV: ""
 
       POSTGRES_HOST_IP_ENV: postgres-db
-      RABBITMQ_HOST_IP_ENV: rabbitmq
+      RABBITMQ_HOST_IP_ENV: rabbitmq-broker
 
   jeeves-minion:
     restart: always
@@ -43,7 +43,7 @@ services:
       RABBITMQ_PASSWORD_ENV: ""
 
       POSTGRES_HOST_IP_ENV: postgres-db
-      RABBITMQ_HOST_IP_ENV: rabbitmq
+      RABBITMQ_HOST_IP_ENV: rabbitmq-broker
 
   postgres-db:
     restart: always
