@@ -24,8 +24,7 @@ from jeeves_commons.constants import (DEFAULT_REST_PORT,
 from jeeves_commons.utils import open_channel
 
 
-
-REST_PORT = os.environ.get(MASTER_HOST_PORT_ENV, DEFAULT_REST_PORT)
+REST_PORT = int(os.environ.get(MASTER_HOST_PORT_ENV, DEFAULT_REST_PORT))
 MESSAGE_BROKER_HOST_IP = os.getenv(RABBITMQ_HOST_IP_ENV, '172.17.0.3')
 MESSAGE_BROKER_HOST_PORT = os.getenv(RABBITMQ_HOST_PORT_ENV,
                                      DEFAULT_BROKER_PORT)

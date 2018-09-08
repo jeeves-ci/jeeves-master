@@ -39,4 +39,5 @@ def wait():
     if not connected:
         raise RuntimeError('failed waiting for rabbitmq broker')
 
+
 wait()
