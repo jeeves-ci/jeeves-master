@@ -29,10 +29,15 @@ services:
   jeeves-minion:
     restart: always
     image: adamlavie/jeeves-minion:master
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /usr/bin/docker:/usr/bin/docker
     build:
       context: ./../jeeves-minion
     networks:
       - jeeves-network
+    expose:
+      - "7777"
     depends_on:
       - "jeeves-master"
     environment:
@@ -50,6 +55,8 @@ services:
   postgres-db:
     restart: always
     image: postgres:latest
+    volumes:
+      - /tmp/pgdata:/var/lib/postgresql/data
     networks:
       - jeeves-network
     expose:
@@ -61,6 +68,8 @@ services:
   rabbitmq-broker:
     restart: always
     image: rabbitmq:latest
+#    volumes:
+#      - /tmp/rabbitmq_data:/var/lib/rabbitmq/mnesia/rabbit@rabbitmq-broker
     networks:
       - jeeves-network
     expose:
