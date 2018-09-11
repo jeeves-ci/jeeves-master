@@ -11,7 +11,7 @@ ENV RABBITMQ_PASSWORD_ENV ""
 RUN git clone https://github.com/jeeves-ci/jeeves-master.git \
     && cd jeeves-master \
     && git checkout master \
-    && pip install -r requirements.txt .
+    && pip install -r requirements.txt -e .
 
 # webui port
 EXPOSE 7778

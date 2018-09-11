@@ -4,11 +4,14 @@ services:
   jeeves-master:
     restart: always
     image: adamlavie/jeeves-master:master
+    volumes:
+      # Used for debug purposes
+      - /home/adaml/dev/jeeves-master:/jeeves-master
     networks:
       - jeeves-network
-    expose:
-      - "8080"
-      - "7778"
+    ports:
+      - "7778:7778"
+      - "8080:8080"
     build:
       context: .
     depends_on:
@@ -30,8 +33,11 @@ services:
     restart: always
     image: adamlavie/jeeves-minion:master
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
       - /usr/bin/docker:/usr/bin/docker
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /tmp/jeeves-minion-work-dir:/tmp/jeeves-minion-work-dir
+      # Used for debug purposes
+      - /home/adaml/dev/jeeves-minion:/jeeves-minion
     build:
       context: ./../jeeves-minion
     networks:
@@ -41,6 +47,7 @@ services:
     depends_on:
       - "jeeves-master"
     environment:
+      MINION_WORKDIR_PATH_ENV: "/tmp/jeeves-minion-work-dir"
       POSTGRES_HOST_PORT_ENV: "5432"
       POSTGRES_USERNAME_ENV: "postgres"
       POSTGRES_PASSWORD_ENV: "postgres"
@@ -51,6 +58,8 @@ services:
 
       POSTGRES_HOST_IP_ENV: postgres-db
       RABBITMQ_HOST_IP_ENV: rabbitmq-broker
+
+      ENV MINION_WORKDIR_PATH_ENV: "/tmp/jeeves-minion-work-dir"
 
   postgres-db:
     restart: always

@@ -23,7 +23,7 @@ setup(
         'flask-restful==0.2.5',
         'flask-restful-swagger==0.12',
         'sqlalchemy==1.1.5',
-        'pyyaml>=3.12',
+        'pyyaml==3.13',
         'psycopg2==2.7.1',
         'tornado==4.2',
         'websocket-client==0.40.0'
