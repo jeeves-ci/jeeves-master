@@ -2,17 +2,21 @@
 <html>
 <head>
     <title>tornado WebSocket example</title>
-    <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
-    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twbs-pagination/1.4.1/jquery.twbsPagination.min.js"></script>
     <script type="text/javascript" src="static/script.js"></script>
 </head>
 <body>
 <div class="container">
-    <h1>Jeeves Tasks Log View</h1>
+    <h2>Jeeves Workflow View</h2>
     <hr>
 
     <div class="workflow_cont">
         <ul class="workflow_list"></ul>
+    </div>
+    <div id="pager">
+        <ul id="pagination" class="pagination-sm"></ul>
     </div>
     <div class="taskTab_cont">
         <ul class="nav nav-tabs taskTabList_cont"></ul>

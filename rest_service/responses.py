@@ -53,10 +53,43 @@ class Workflow(object):
         self.status = kwargs.get('status')
         self.workflow_id = kwargs.get('workflow_id')
         self.started_at = kwargs.get('started_at')
+        self.ended_at = kwargs.get('ended_at')
 
     response_fields = {
         'status': fields.String,
         'workflow_id': fields.String,
         'started_at': fields.String,
         'ended_at': fields.String,
+    }
+
+
+@swagger.model
+class Workflows(object):
+    def __init__(self, **kwargs):
+        self.workflows = kwargs.get('workflows')
+        self.page = kwargs.get('page')
+        self.size = kwargs.get('size')
+        self.total = kwargs.get('total')
+
+    response_fields = {
+        'workflows': fields.Raw,
+        'page': fields.Integer,
+        'size': fields.Integer,
+        'total': fields.Integer,
+    }
+
+
+@swagger.model
+class Tasks(object):
+    def __init__(self, **kwargs):
+        self.tasks = kwargs.get('tasks')
+        self.page = kwargs.get('page')
+        self.size = kwargs.get('size')
+        self.total = kwargs.get('total')
+
+    response_fields = {
+        'tasks': fields.Raw,
+        'page': fields.Integer,
+        'size': fields.Integer,
+        'total': fields.Integer,
     }

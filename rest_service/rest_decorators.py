@@ -1,3 +1,5 @@
+from rest_service.storage import storage_client
+
 from flask_restful import reqparse
 
 
@@ -12,3 +14,12 @@ def with_params(func):
                 url_args[arg] = kwargs.get(arg)
         return func(*args, **url_args)
     return inject_params
+
+
+# Inject storage client and close session at the end
+def with_storage(func):
+    def close_session(*args, **kwargs):
+        with storage_client() as storage:
+            res = func(*args, storage=storage, **kwargs)
+        return res
+    return close_session

@@ -61,7 +61,9 @@ app.api.add_resource(Workflow,
 app.api.add_resource(Workflows,
                      '/api/v1.0/workflows',
                      endpoint='api/v1.0/workflows',
-                     defaults={'status': None})
+                     defaults={'status': None,
+                               'page': 1,
+                               'size': 10})
 
 app.api.add_resource(Task,
                      '/api/v1.0/task',
@@ -71,7 +73,9 @@ app.api.add_resource(Tasks,
                      '/api/v1.0/tasks',
                      endpoint='api/v1.0/tasks',
                      defaults={'workflow_id': None,
-                               'status': None}
+                               'status': None,
+                               'page': 1,
+                               'size': 100}
                      )
 
 # app.api.add_resource(Minion,

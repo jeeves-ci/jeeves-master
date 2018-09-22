@@ -1,9 +1,9 @@
 from rest_service import responses
+from rest_service.rest_decorators import with_storage
 
 from flask_restful import Resource, marshal_with
 from flask_restful_swagger import swagger
 
-from jeeves_commons.storage.storage import get_storage_client
 from jeeves_commons.queue import publisher
 
 
@@ -14,8 +14,9 @@ class Minion(Resource):
         nickname="stop",
         notes="Stop a Jeeves Minion"
     )
+    @with_storage
     @marshal_with(responses.Minion.response_fields)
-    def delete(self, minion_ip, **kwargs):
+    def delete(self, minion_ip, storage=None, **kwargs):
         publisher.shutdown_minion(minion_ip=minion_ip)
-        # get_storage_client().minions.update
-        return get_storage_client().minions.list(**kwargs)
+        storage.minions.update
+        return storage.minions.list(**kwargs)

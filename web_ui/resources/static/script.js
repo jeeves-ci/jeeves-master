@@ -1,5 +1,4 @@
 $( document ).ready(function() {
-//    console.log("ready!");
     var activeSocket = new socketDetails();
     var url = window.location.href;
     var arr_url = url.split("/");
@@ -8,10 +7,32 @@ $( document ).ready(function() {
     var restfulPublicIp = arrIp[0] + ":8080";
 
     var url = `http://${restfulPublicIp}/api/v1.0/workflows`;
-    $.ajax({
-        url,
-        success: onWorkflowsListRecieve
-    });
+
+    var $pagination = $('#pagination'),
+    totalRecords = 10,
+    recPerPage = 2,
+    page = 1,
+    totalPages = Math.ceil(totalRecords / recPerPage);
+
+    function apply_pagination() {
+          $pagination.twbsPagination({
+                totalPages: totalPages,
+                visiblePages: 3,
+                first: '',
+                last: '',
+                onPageClick: function (event, page) {
+                      $.ajax({
+                          url: url + '?page=' + page + '&size=' + recPerPage,
+                          success: onWorkflowsListReceive
+                      });
+                }
+          });
+    }
+    apply_pagination();
+//    $.ajax({
+//        url,
+//        success: onWorkflowsListReceive
+//    });
 
     function socketDetails(socket, taskID) {
         this.socket = socket;
@@ -28,15 +49,17 @@ $( document ).ready(function() {
         };
     }
 
-    function onWorkflowsListRecieve(data) {
+    function onWorkflowsListReceive(data) {
         var workflowCont = $('.workflow_list');
-        $.each(data, function (index, workflow) {
+        workflowCont.empty();
+        totalRecords = data.total;
+        $.each(data.workflows, function (index, workflow) {
             var linkObj = $('<a>',{
-                    text: 'Workflow Id: ' + workflow.workflow_id,
+                    text: workflow.workflow_id,
                     title: 'Workflow Id: ' + workflow.workflow_id,
                     wfId: workflow.workflow_id,
                     href: '#',
-                    click: onWorkflowClick.bind(workflow)
+                    click: onWorkflowClick.bind(workflow.workflow_id)
                 }),
                 liObj = $('<li>').append(linkObj);
             workflowCont.append(liObj);
@@ -56,8 +79,8 @@ $( document ).ready(function() {
 
     function onTaskDataListReceive(data) {
         var listCont = $('.taskTabList_cont');
-        listCont.html("");
-        $.each(data, function (index, taskObj) {
+        listCont.empty();
+        $.each(data.tasks, function (index, taskObj) {
             var linkObj = $('<a>',{
                     text: taskObj.task_name,
                     href: '#',
@@ -98,7 +121,6 @@ $( document ).ready(function() {
             $message.hide();
             $message.fadeIn("fast");
             $message.text('received message');
-//            console.log(ev.data);
             $content.append(ev.data);
         };
         ws.onclose = function(ev){

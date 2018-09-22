@@ -1,9 +1,8 @@
 from rest_service import responses
+from rest_service.rest_decorators import with_storage
 
 from flask_restful import Resource, marshal_with
 from flask_restful_swagger import swagger
-
-from jeeves_commons.storage.storage import get_storage_client
 
 
 class Task(Resource):
@@ -13,7 +12,7 @@ class Task(Resource):
         nickname="get",
         notes="Returns a task by it's ID"
     )
+    @with_storage
     @marshal_with(responses.Task.response_fields)
-    def get(self, task_id=None, **kwargs):
-        return get_storage_client().tasks.get(task_id=task_id,
-                                              **kwargs)
+    def get(self, task_id=None, storage=None, **kwargs):
+        return storage.tasks.get(task_id=task_id, **kwargs)
