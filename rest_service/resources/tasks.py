@@ -4,8 +4,6 @@ from rest_service.rest_decorators import with_params, with_storage
 from flask_restful import Resource, marshal_with, marshal
 from flask_restful_swagger import swagger
 
-from rest_service.storage import storage_client
-
 
 class Tasks(Resource):
 
@@ -20,13 +18,15 @@ class Tasks(Resource):
     def get(self,
             workflow_id=None,
             status=None,
-            page=1,
+            order_by=None,
+            page=0,
             size=100,
             storage=None,
             **kwargs):
         tsks, total = storage.tasks.list(workflow_id=workflow_id,
                                          status=status,
-                                         page=page,
+                                         order_by=order_by,
+                                         page=0,
                                          size=size,
                                          **kwargs)
         tsks = marshal(tsks, responses.Task.response_fields)

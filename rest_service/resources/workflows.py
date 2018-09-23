@@ -16,8 +16,15 @@ class Workflows(Resource):
     @with_storage
     @with_params
     @marshal_with(responses.Workflows.response_fields)
-    def get(self, status=None, page=1, size=10, storage=None, **kwargs):
+    def get(self,
+            status=None,
+            page=0,
+            size=10,
+            order_by=None,
+            storage=None,
+            **kwargs):
         wfs, total = storage.workflows.list(status=status,
+                                            order_by=order_by,
                                             page=page,
                                             size=size,
                                             **kwargs)

@@ -62,6 +62,7 @@ app.api.add_resource(Workflows,
                      '/api/v1.0/workflows',
                      endpoint='api/v1.0/workflows',
                      defaults={'status': None,
+                               'order_by': None,
                                'page': 1,
                                'size': 10})
 
@@ -74,6 +75,7 @@ app.api.add_resource(Tasks,
                      endpoint='api/v1.0/tasks',
                      defaults={'workflow_id': None,
                                'status': None,
+                               'order_by': None,
                                'page': 1,
                                'size': 100}
                      )

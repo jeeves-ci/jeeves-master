@@ -5,7 +5,6 @@ from flask_restful import Resource, marshal_with
 from flask_restful_swagger import swagger
 
 
-
 class Minions(Resource):
 
     @swagger.operation(

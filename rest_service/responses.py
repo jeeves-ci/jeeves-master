@@ -26,6 +26,7 @@ class Task(object):
         'minion_ip': fields.String,
         'created_at': fields.String,
         'started_at': fields.String,
+        'date_done': fields.String,
         # 'result': fields.String,
         'traceback': fields.String,
     }
