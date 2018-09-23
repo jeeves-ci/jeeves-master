@@ -129,11 +129,6 @@ function initMainTable(){
             // This row is already open - close it
             row.child.hide();
             tr.removeClass('shown');
-            for (var key in activeSockets) {
-                if (activeSockets[key].workflowID == row.data().workflow_id) {
-                    activeSockets[key].close();
-                }
-            }
         }
         else {
             // Open this row
@@ -142,6 +137,12 @@ function initMainTable(){
             row.child( getNewTableDiv(id, row.data()) ).show();
             initNewTable(id, row.data());
             tr.addClass('shown');
+        }
+        // Remove any sockets belonging to the workflow
+        for (var key in activeSockets) {
+            if (activeSockets[key].workflowID == row.data().workflow_id) {
+                activeSockets[key].close();
+            }
         }
     } );
 }
