@@ -1,5 +1,4 @@
 $( document ).ready(function() {
-console.log('da fuck');
     var url = window.location.href;
     var arr_url = url.split("/");
     var webUiPublicIp = arr_url[2];
@@ -8,7 +7,6 @@ console.log('da fuck');
 
     $("#login-btn").click( function()
        {
-           alert("da fuck234");
            var url = `http://${restfulPublicIp}/api/v1.0/login`;
          var data = {"email": $("#email").val(),
                      "password": $("#psw").val()};
