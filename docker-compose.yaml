@@ -26,6 +26,11 @@ services:
       RABBITMQ_USERNAME_ENV: "guest"
       RABBITMQ_PASSWORD_ENV: "guest"
 
+      JEEVES_JWT_SECRET_KEY_ENV: "change-me"
+      JEEVES_ADMIN_EMAIL_ENV: "admin@jeeves.com"
+      JEEVES_ADMIN_PASSWORD_ENV: "Password1"
+      JEEVES_ORG_NAME_ENV: "jeeves"
+
       POSTGRES_HOST_IP_ENV: postgres-db
       RABBITMQ_HOST_IP_ENV: rabbitmq-broker
 

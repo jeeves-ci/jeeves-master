@@ -1,11 +1,12 @@
 from rest_service import responses
+from rest_service.resources.resource import JeevesResource
 from rest_service.rest_decorators import with_params, with_storage
 
-from flask_restful import Resource, marshal_with, marshal
+from flask_restful import marshal_with, marshal
 from flask_restful_swagger import swagger
 
 
-class Tasks(Resource):
+class Tasks(JeevesResource):
 
     @swagger.operation(
         responseClass='List[{0}]'.format(responses.Task.__name__),

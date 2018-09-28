@@ -6,26 +6,34 @@ from rest_service import responses
 from rest_service.exceptions import (JeevesServerError,
                                      WorkflowAlreadyExists,
                                      WorkflowNotFound)
+from rest_service.resources.resource import JeevesResource
 from rest_service.rest_decorators import with_params, with_storage
 
 from jeeves_commons.queue import publisher
 from jeeves_commons.storage import utils as storage_utils
+from jeeves_commons.random_constants import get_random_name
 from jeeves_commons.dsl.validate import validate_workflow, ValidationError
 
-from flask_restful import Resource, marshal_with, request
+from flask_restful import marshal_with, request
 
 
-class Workflow(Resource):
+class Workflow(JeevesResource):
 
     @with_storage
     @with_params
     @marshal_with(responses.Workflow.response_fields)
-    def post(self, workflow_id=None, execute=True, storage=None, **kwargs):
+    def post(self,
+             name=None,
+             execute=True,
+             storage=None,
+             **kwargs):
+        if name is None:
+            name = get_random_name(0)
         # Assign default UUID id
-        if not workflow_id:
-            workflow_id = str(uuid.uuid4())
+        workflow_id = str(uuid.uuid4())
         # Raise if workflow with id already exists
-        elif storage.workflows.get(workflow_id):
+        if storage.workflows.get(workflow_id):
+            # Modify
             raise WorkflowAlreadyExists('Workflow with ID \'{}\' already '
                                         'exists.')
         data = json.loads(request.data)
@@ -42,9 +50,11 @@ class Workflow(Resource):
 
         # Create workflow and workflow tasks.
         workflow, tasks = storage_utils.create_workflow(storage,
+                                                        name,
                                                         workflow,
                                                         workflow_id,
-                                                        env)
+                                                        env,
+                                                        commit=False)
         if execute:
             storage.workflows.update(workflow_id,
                                      status='QUEUED')
@@ -52,7 +62,7 @@ class Workflow(Resource):
             for task_item in tasks:
                 storage.tasks.update(task_item.task_id, status='QUEUED')
                 publisher.send_task_message(task_item.task_id)
-            storage.commit()
+        storage.commit()
         return workflow, 201
 
     @with_storage
@@ -66,4 +76,4 @@ class Workflow(Resource):
             raise JeevesServerError('Workflow {0} already revoked.',
                                     404)
         publisher.revoke_workflow_manually(workflow)
-        return workflow, 200
+        return workflow, 200, {'Access-Control-Allow-Origin': '*'}

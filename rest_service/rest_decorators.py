@@ -21,5 +21,6 @@ def with_storage(func):
     def close_session(*args, **kwargs):
         with storage_client() as storage:
             res = func(*args, storage=storage, **kwargs)
+            storage.close()
         return res
     return close_session

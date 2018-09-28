@@ -26,6 +26,7 @@ setup(
         'pyyaml==3.13',
         'psycopg2==2.7.1',
         'tornado==4.2',
+        'Flask-JWT-Extended==3.13.0',
         'websocket-client==0.40.0'
     ],
     package_data={

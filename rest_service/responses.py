@@ -57,6 +57,7 @@ class Workflow(object):
         self.ended_at = kwargs.get('ended_at')
 
     response_fields = {
+        'name': fields.String,
         'status': fields.String,
         'workflow_id': fields.String,
         'started_at': fields.String,
@@ -93,4 +94,36 @@ class Tasks(object):
         'page': fields.Integer,
         'size': fields.Integer,
         'total': fields.Integer,
+    }
+
+
+@swagger.model
+class User(object):
+    def __init__(self, **kwargs):
+        self.username = kwargs.get('username')
+        self.email = kwargs.get('email')
+
+    response_fields = {
+        'email': fields.String,
+        'role': fields.String,
+    }
+
+
+@swagger.model
+class Authentication(object):
+    def __init__(self, **kwargs):
+        self.access_token = kwargs.get('access_token')
+
+    response_fields = {
+        'access_token': fields.String,
+    }
+
+
+@swagger.model
+class Info(object):
+    def __init__(self, **kwargs):
+        self.version = kwargs.get('version')
+
+    response_fields = {
+        'version': fields.String,
     }

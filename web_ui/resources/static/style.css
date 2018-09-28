@@ -6,6 +6,10 @@ tr.shown td.details-control {
     background: url('expand_close.png') no-repeat center center;
 }
 
+tr.highlight {
+    background-color: whitesmoke !important;
+}
+
 
 
 

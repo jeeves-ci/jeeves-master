@@ -22,6 +22,11 @@ class IndexHandler(tornado.web.RequestHandler):
         self.render("index.html")
 
 
+class LoginHandler(tornado.web.RequestHandler):
+    def get(self):
+        self.render("login.html")
+
+
 class SocketHandler(tornado.websocket.WebSocketHandler):
     clients = {}
     minion_sockets = {}
@@ -53,7 +58,12 @@ class SocketHandler(tornado.websocket.WebSocketHandler):
 
     def _remove_client(self):
         clients = SocketHandler.clients.get(self.task_id)
-        clients.remove(self)
+        try:
+            clients.remove(self)
+        except KeyError as e:
+            logging.info('Failed removing client for task with ID {0}: {1}'.
+                         format(self.task_id, e))
+            pass
         SocketHandler.clients[self.task_id] = clients
 
     def _add_proc(self, proc):
@@ -67,8 +77,13 @@ class SocketHandler(tornado.websocket.WebSocketHandler):
     def _remove_proc(self):
         proc = SocketHandler.minion_sockets.get(self.task_id)
         if proc:
-            proc.proc.terminate()
-            proc.proc.wait()
+            try:
+                proc.proc.terminate()
+                proc.proc.wait()
+            except:
+                logging.info('Failed killing tail proc for task with ID {}. '
+                             'Must be terminated..'.format(self.task_id))
+                pass
         SocketHandler.minion_sockets[self.task_id] = None
 
     def _start_data_stream(self, minion_ip, workflow_id):
@@ -111,6 +126,7 @@ class LogStreamHttpServer(object):
     def _start_tornado_instance(port):
         app = tornado.web.Application(
             handlers=[(r'/', IndexHandler),
+                      (r'/login', LoginHandler),
                       (r'/tail/(.*)', SocketHandler)],
             template_path=resource_filename('web_ui', 'resources'),
             static_path=resource_filename('web_ui.resources', 'static')

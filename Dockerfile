@@ -8,6 +8,11 @@ ENV RABBITMQ_HOST_PORT_ENV ""
 ENV RABBITMQ_USERNAME_ENV ""
 ENV RABBITMQ_PASSWORD_ENV ""
 
+ENV JEEVES_JWT_SECRET_KEY_ENV "change-me"
+ENV JEEVES_ADMIN_EMAIL_ENV "admin@jeeves.com"
+ENV JEEVES_ADMIN_PASSWORD_ENV "Password1"
+ENV JEEVES_ORG_NAME_ENV "default"
+
 RUN git clone https://github.com/jeeves-ci/jeeves-master.git \
     && cd jeeves-master \
     && git checkout master \

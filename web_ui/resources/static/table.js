@@ -1,25 +1,57 @@
-const PAGE_SIZE = 25;
-var url = window.location.href;
-var arr_url = url.split("/");
-var webUiPublicIp = arr_url[2];
-var arrIp = webUiPublicIp.split(":");
-var restfulPublicIp = arrIp[0] + ":8080";
-
 $( document ).ready(function() {
+
+//    $(document).ajaxComplete(function myErrorHandler(event, xhr, ajaxOptions, thrownError) {
+//      alert("Ajax request completed with response code " + xhr.status);
+//    });
+    var token = window.localStorage.getItem("access_token");
+    if (token == null) {
+        token = window.localStorage.getItem("access_token");
+    }
+    $.ajaxSetup({
+        beforeSend: function (xhr)
+        {
+           xhr.setRequestHeader("Authorization","Bearer " + token);
+        },
+//        error: function (jqXHR, status, err) {
+//            alert("Local error callback.");
+//        },
+    });
+
+
+    const PAGE_SIZE = 25;
+    var url = window.location.href;
+    var arr_url = url.split("/");
+    var webUiPublicIp = arr_url[2];
+    var arrIp = webUiPublicIp.split(":");
+    var restfulPublicIp = arrIp[0] + ":8080";
+
+    $('.glyphicon-log-in').click(function(e)
+    {
+         var sidebar = $('.sidebar-container');
+         sidebar.empty();
+         var main = $('.main');
+         main.empty().load('login');
+
+    });
+
+    function getTaskTableDiv(id, data){
+        return "<div class='newTable'><table id='"+id+"'></table></div>";
+    }
+
+    function getMainTableDiv(){
+        return `<div id="table-cont"><table id="table"></table></div>`;
+    }
+    $('.main').append(getMainTableDiv());
+
+    function getNewSocketDiv(task_id){
+        return "<pre id='socket_cont'><div id='content-" + task_id+ "'></div></pre>";
+    }
+
     initMainTable();
-
-function getNewTableDiv(id, data){
-    return "<div class='newTable'><table id='"+id+"'></table></div>";
-}
-
-function getNewSocketDiv(task_id){
-    return "<pre id='socket_cont'><div id='content-" + task_id+ "'></div></pre>";
-}
-
 
 function initNewTable(id, data){
     var workflowId = data.workflow_id;
-    url = `http://${restfulPublicIp}/api/v1.0/tasks?workflow_id=${workflowId}`
+    url = `http://${restfulPublicIp}/api/v1.0/workflow/${workflowId}/tasks`
     $.ajax({
       url: url,
       success: onWorkflowTasksReceive.bind(this, id)
@@ -41,7 +73,6 @@ function onWorkflowTasksReceive(id, data){
         info: false,
         "searching": false
     } );
-//    table.setAttribute("class", "table-hover");
 
     $('#'+id).on('click', 'tr', function () {
 
@@ -55,15 +86,31 @@ function onWorkflowTasksReceive(id, data){
                 row.child.hide();
                 tr.removeClass('shown');
             }
-            else {
+            else if (!tr.parent().is("thead")) {
                 // Open this row
-                console.log(row.data());
-                var id = row.data().workflow_id;
                 row.child( getNewSocketDiv(row.data().task_id) ).show();
                 tr.addClass('shown');
             }
-            onTaskClick(row.data().task_id, row.data().workflow_id);
+            if (!tr.parent().is("thead")) {
+                onTaskClick(row.data().task_id, row.data().workflow_id);
+            }
     } );
+
+    // Add highlight on hover
+    $('#'+id).on( 'mouseenter', 'tr', function () {
+            var tr = $(this).closest('tr');
+            if (!tr.parent().is("thead")) {
+                tr.addClass( 'highlight' ).siblings().removeClass('highlight');
+                tr.css({"cursor":"pointer"})
+            }
+        } );
+
+    $('#'+id).on( 'mouseleave', 'tr', function () {
+            var tr = $(this).closest('tr');
+            tr.removeClass( 'highlight' );
+        } );
+
+
 }
 
 
@@ -76,7 +123,8 @@ function initMainTable(){
                 "data":           null,
                 "defaultContent": ''
             },
-            { "data": "workflow_id", title:"Workflow", orderable:false, searchable:true },
+            { "data": "name", title:"Name", searchable:true },
+            { "data": "workflow_id", title:"Workflow", orderable:false },
             { "data": "started_at", title:"Started At" },
             { "data": "ended_at", title:"Ended At" },
             { "data": "status", title:"Status" }
@@ -102,11 +150,13 @@ function initMainTable(){
               d.size = d.length;
               orderBy = [];
               d.order.forEach(function(element){
-                if (element.column == 2) {
+                if (element.column == 1) {
+                    orderBy.push('name', element.dir);
+                } else if (element.column == 3) {
                     orderBy.push('started_at', element.dir);
-                } else if (element.column == 3){
-                    orderBy.push('ended_at', element.dir);
                 } else if (element.column == 4){
+                    orderBy.push('ended_at', element.dir);
+                } else if (element.column == 5){
                      orderBy.push('status', element.dir);
                  }
               })
@@ -114,11 +164,25 @@ function initMainTable(){
               if (d.search) {
                 d.pattern = d.search.value;
               }
+              delete d.columns;
+              delete d.draw;
+              delete d.length;
+              delete d.start;
+              delete d.search;
+              delete d.order;
           },
         },
         "serverSide": true,
         "processing": true
     } );
+    // Remove any sockets that may remain after pagination
+    $('#table').on( 'page.dt', function () {
+        for (var key in activeSockets) {
+            activeSockets[key].close();
+            delete activeSockets[key];
+        }
+    } );
+
 
     // Add event listener for opening and closing workflows
     $('#table tbody').on('click', 'td.details-control', function () {
@@ -132,9 +196,8 @@ function initMainTable(){
         }
         else {
             // Open this row
-            console.log(row.data());
             var id = row.data().workflow_id;
-            row.child( getNewTableDiv(id, row.data()) ).show();
+            row.child( getTaskTableDiv(id, row.data()) ).show();
             initNewTable(id, row.data());
             tr.addClass('shown');
         }
@@ -142,6 +205,7 @@ function initMainTable(){
         for (var key in activeSockets) {
             if (activeSockets[key].workflowID == row.data().workflow_id) {
                 activeSockets[key].close();
+                delete activeSockets[key];
             }
         }
     } );
@@ -156,6 +220,7 @@ function onTaskClick(taskID, workflowID) {
         var socketContainer = $('#content-'+taskID);
         socketContainer.remove();
         activeSocket.close();
+        delete activeSockets[taskID];
     } else {
         activeSockets[taskID] = openSocket(taskID, workflowID);
     }
