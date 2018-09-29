@@ -1,4 +1,5 @@
 import os
+from datetime import timedelta
 
 from flask import Flask, jsonify
 from flask_restful import Api
@@ -132,6 +133,9 @@ app.api.add_resource(Workflows,
 
 app.config['JWT_SECRET_KEY'] = os.getenv(JEEVES_JWT_SECRET_KEY_ENV,
                                          DEFAULT_JEEVES_JWT_SECRET_KEY)
+# config JWT to expire within half an hour
+app.config['JWT_EXPIRATION_DELTA'] = timedelta(minutes=30)
+
 jwt = JWTManager(app)
 # app.api.add_resource(Minion,
 #                      '/api/v1.0/minion/<minion_ip>',

@@ -35,13 +35,11 @@ class Workflow(JeevesResource):
              **kwargs):
         if name is None:
             name = get_random_name(0)
-        # Assign default UUID id
-        workflow_id = str(uuid.uuid4())
-        # Raise if workflow with id already exists
-        if storage.workflows.get(workflow_id):
-            # Modify
-            raise WorkflowAlreadyExists('Workflow with ID \'{}\' already '
-                                        'exists.')
+
+        if storage.workflows.get(name=name, tenant_id=user.tenant_id):
+            raise WorkflowAlreadyExists('Workflow with name \'{}\' already '
+                                        'exists.'.format(name))
+
         data = json.loads(request.data)
         workflow = data['workflow']
         env = data.get('env', {})
@@ -58,12 +56,11 @@ class Workflow(JeevesResource):
         workflow, tasks = storage_utils.create_workflow(storage,
                                                         name,
                                                         workflow,
-                                                        workflow_id,
                                                         user.tenant_id,
                                                         env,
                                                         commit=False)
         if execute:
-            storage.workflows.update(workflow_id,
+            storage.workflows.update(workflow.workflow_id,
                                      status='QUEUED')
             # queue all workflow tasks.
             for task_item in tasks:
@@ -78,7 +75,7 @@ class Workflow(JeevesResource):
     @with_params
     @marshal_with(responses.Workflow.response_fields)
     def delete(self, workflow_id=None, storage=None, **kwargs):
-        workflow = storage.workflows.get(workflow_id)
+        workflow = storage.workflows.get(workflow_id=workflow_id)
         if not workflow:
             raise WorkflowNotFound('Workflow with ID {0} does not exist.')
         if workflow.status == 'REVOKED':

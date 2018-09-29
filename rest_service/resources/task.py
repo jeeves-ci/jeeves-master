@@ -26,7 +26,8 @@ class Task(JeevesResource):
             storage=None,
             user=None,
             **kwargs):
-        workflow = storage.workflows.get(workflow_id, tenant_id=user.tenant_id)
+        workflow = storage.workflows.get(workflow_id=workflow_id,
+                                         tenant_id=user.tenant_id)
         if workflow is None:
             raise WorkflowNotFound('Workflow with ID {} not found'
                                    .format(workflow_id))

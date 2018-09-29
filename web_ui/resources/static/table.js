@@ -123,8 +123,8 @@ function initMainTable(){
                 "data":           null,
                 "defaultContent": ''
             },
+            { "data": "workflow_id", title:"ID", orderable:false },
             { "data": "name", title:"Name", searchable:true },
-            { "data": "workflow_id", title:"Workflow", orderable:false },
             { "data": "started_at", title:"Started At" },
             { "data": "ended_at", title:"Ended At" },
             { "data": "status", title:"Status" }
@@ -150,7 +150,7 @@ function initMainTable(){
               d.size = d.length;
               orderBy = [];
               d.order.forEach(function(element){
-                if (element.column == 1) {
+                if (element.column == 2) {
                     orderBy.push('name', element.dir);
                 } else if (element.column == 3) {
                     orderBy.push('started_at', element.dir);
