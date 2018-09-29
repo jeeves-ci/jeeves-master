@@ -1,5 +1,6 @@
 from rest_service import responses
-from rest_service.rest_decorators import with_storage
+from rest_service.rest_decorators import (with_storage,
+                                          jwt_required)
 from rest_service.resources.resource import JeevesResource
 
 from flask_restful import marshal_with
@@ -16,6 +17,7 @@ class Minion(JeevesResource):
         notes="Stop a Jeeves Minion"
     )
     @with_storage
+    @jwt_required
     @marshal_with(responses.Minion.response_fields)
     def delete(self, minion_ip, storage=None, **kwargs):
         publisher.shutdown_minion(minion_ip=minion_ip)

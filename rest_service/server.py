@@ -7,6 +7,7 @@ from flask_jwt_extended import JWTManager
 from rest_service import config
 from rest_service.resources.login import Login
 from rest_service.resources.user import User
+from rest_service.resources.users import Users
 from rest_service.resources.tasks import Tasks
 from rest_service.resources.workflows import Workflows
 from rest_service.resources.workflow import Workflow
@@ -97,6 +98,10 @@ app.api.add_resource(Info,
 app.api.add_resource(User,
                      '/api/v1.0/user',
                      endpoint='api/v1.0/user')
+
+app.api.add_resource(Users,
+                     '/api/v1.0/users',
+                     endpoint='api/v1.0/users')
 
 app.api.add_resource(Workflow,
                      '/api/v1.0/workflow',

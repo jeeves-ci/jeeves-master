@@ -7,7 +7,10 @@ from rest_service.exceptions import (JeevesServerError,
                                      WorkflowAlreadyExists,
                                      WorkflowNotFound)
 from rest_service.resources.resource import JeevesResource
-from rest_service.rest_decorators import with_params, with_storage
+from rest_service.rest_decorators import (with_params,
+                                          with_storage,
+                                          jwt_required,
+                                          editor_only)
 
 from jeeves_commons.queue import publisher
 from jeeves_commons.storage import utils as storage_utils
@@ -20,12 +23,15 @@ from flask_restful import marshal_with, request
 class Workflow(JeevesResource):
 
     @with_storage
+    @jwt_required
+    @editor_only
     @with_params
     @marshal_with(responses.Workflow.response_fields)
     def post(self,
              name=None,
              execute=True,
              storage=None,
+             user=None,
              **kwargs):
         if name is None:
             name = get_random_name(0)
@@ -53,6 +59,7 @@ class Workflow(JeevesResource):
                                                         name,
                                                         workflow,
                                                         workflow_id,
+                                                        user.tenant_id,
                                                         env,
                                                         commit=False)
         if execute:
@@ -66,6 +73,8 @@ class Workflow(JeevesResource):
         return workflow, 201
 
     @with_storage
+    @jwt_required
+    @editor_only
     @with_params
     @marshal_with(responses.Workflow.response_fields)
     def delete(self, workflow_id=None, storage=None, **kwargs):

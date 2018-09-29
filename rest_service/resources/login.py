@@ -1,7 +1,8 @@
 import hashlib
+import base64
 
 from rest_service import responses
-from rest_service.exceptions import InvalidRequestBody, UnAuthorized
+from rest_service.exceptions import InvalidRequest, UnAuthorized
 from rest_service.resources.resource import JeevesResource
 from rest_service.rest_decorators import with_storage
 
@@ -20,15 +21,18 @@ class Login(JeevesResource):
     @with_storage
     @marshal_with(responses.Authentication.response_fields)
     def post(self, storage, **kwargs):
-        if not request.is_json:
-            raise InvalidRequestBody('Missing JSON in request')
+        auth_header = request.headers.get('Authorization', None)
+        if auth_header is None:
+            raise InvalidRequest('Missing authorization header')
 
-        email = request.json.get('email', None)
-        password = request.json.get('password', None)
+        if not auth_header.startswith('Basic '):
+            raise InvalidRequest('Missing "Basic" authentication header')
+
+        email, password = base64.b64decode(auth_header[6:]).split(':')
         if not email:
-            raise InvalidRequestBody('Missing email parameter')
+            raise InvalidRequest('Missing email parameter')
         if not password:
-            raise InvalidRequestBody('Missing password parameter')
+            raise InvalidRequest('Missing password parameter')
 
         user = storage.users.get(email=email)
         if user is None:

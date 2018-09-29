@@ -1,7 +1,10 @@
 
 from rest_service import responses
 
-from rest_service.rest_decorators import with_params, with_storage
+from rest_service.rest_decorators import (with_params,
+                                          with_storage,
+                                          jwt_required,
+                                          admin_only)
 from rest_service.exceptions import (InvalidRequestBody,
                                      UserExists,
                                      UnAuthorized)
@@ -69,6 +72,8 @@ class User(JeevesResource):
         return user, 200, {'Access-Control-Allow-Origin': '*'}
 
     @with_storage
+    @jwt_required
+    @admin_only
     @with_params
     def delete(self, **kwargs):
         # implement

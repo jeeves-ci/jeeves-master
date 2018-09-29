@@ -25,7 +25,7 @@ $( document ).ready(function() {
     var arrIp = webUiPublicIp.split(":");
     var restfulPublicIp = arrIp[0] + ":8080";
 
-    $('.glyphicon-log-in').click(function(e)
+    $('#login').click(function(e)
     {
          var sidebar = $('.sidebar-container');
          sidebar.empty();

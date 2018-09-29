@@ -4,7 +4,9 @@ from rest_service.resources.resource import JeevesResource
 from flask_restful import marshal_with, marshal
 from flask_restful_swagger import swagger
 
-from rest_service.rest_decorators import with_params, with_storage
+from rest_service.rest_decorators import (with_params,
+                                          with_storage,
+                                          jwt_required)
 
 
 class Workflows(JeevesResource):
@@ -15,6 +17,7 @@ class Workflows(JeevesResource):
         notes="Returns a list of workflows served to jeeves."
     )
     @with_storage
+    @jwt_required
     @with_params
     @marshal_with(responses.Workflows.response_fields)
     def get(self,
@@ -24,9 +27,10 @@ class Workflows(JeevesResource):
             order_by=None,
             pattern=None,
             storage=None,
+            user=None,
             **kwargs):
-        # raise UnAuthorized('You are NOT authorized')
-        wfs, total = storage.workflows.list(status=status,
+        wfs, total = storage.workflows.list(user.tenant_id,
+                                            status=status,
                                             order_by=order_by,
                                             pattern=pattern,
                                             page=page,

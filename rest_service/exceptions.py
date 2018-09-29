@@ -46,6 +46,11 @@ class InvalidRequestBody(JeevesServerError):
         JeevesServerError.__init__(self, message, status_code, payload)
 
 
+class InvalidRequest(JeevesServerError):
+    def __init__(self, message, status_code=400, payload=None):
+        JeevesServerError.__init__(self, message, status_code, payload)
+
+
 class UserExists(JeevesServerError):
     def __init__(self, message, status_code=409, payload=None):
         JeevesServerError.__init__(self, message, status_code, payload)

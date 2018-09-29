@@ -1,4 +1,5 @@
 $( document ).ready(function() {
+    console.log('da fuck');
     var url = window.location.href;
     var arr_url = url.split("/");
     var webUiPublicIp = arr_url[2];
@@ -7,16 +8,13 @@ $( document ).ready(function() {
 
     $("#login-btn").click( function()
        {
-           var url = `http://${restfulPublicIp}/api/v1.0/login`;
-         var data = {"email": $("#email").val(),
-                     "password": $("#psw").val()};
+         var url = `http://${restfulPublicIp}/api/v1.0/login`;
+         var headers = {'Authorization': "Basic " + btoa($("#email").val() + ":" + $("#psw").val())};
+
          $.ajax({
              url,
              type: "POST",
-             data: JSON.stringify(data),
-             headers: {
-                 "Content-Type": "application/json",
-             },
+             headers: headers,
              dataType: "json",
              success: onLoginReceived.bind(this)
          });

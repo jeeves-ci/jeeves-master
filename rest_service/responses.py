@@ -100,8 +100,8 @@ class Tasks(object):
 @swagger.model
 class User(object):
     def __init__(self, **kwargs):
-        self.username = kwargs.get('username')
         self.email = kwargs.get('email')
+        self.role = kwargs.get('role')
 
     response_fields = {
         'email': fields.String,
