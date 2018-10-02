@@ -5,7 +5,7 @@ $( document ).ready(function() {
 //    });
     var token = window.localStorage.getItem("access_token");
     if (token == null) {
-        token = window.localStorage.getItem("access_token");
+        token = window.sessionStorage.getItem("access_token");
     }
     $.ajaxSetup({
         beforeSend: function (xhr)
@@ -170,6 +170,14 @@ function initMainTable(){
               delete d.start;
               delete d.search;
               delete d.order;
+          },
+          error: function(jqXHR, exception) {
+               if (jqXHR.status === 401) {
+                     var sidebar = $('.sidebar-container');
+                     sidebar.empty();
+                     var main = $('.main');
+                     main.empty().load('login');
+               }
           },
         },
         "serverSide": true,

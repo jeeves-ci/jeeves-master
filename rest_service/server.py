@@ -133,8 +133,8 @@ app.api.add_resource(Workflows,
 
 app.config['JWT_SECRET_KEY'] = os.getenv(JEEVES_JWT_SECRET_KEY_ENV,
                                          DEFAULT_JEEVES_JWT_SECRET_KEY)
-# config JWT to expire within half an hour
-app.config['JWT_EXPIRATION_DELTA'] = timedelta(minutes=30)
+# config JWT to expire within 48 hours
+app.config['JWT_EXPIRATION_DELTA'] = timedelta(hours=48)
 
 jwt = JWTManager(app)
 # app.api.add_resource(Minion,
