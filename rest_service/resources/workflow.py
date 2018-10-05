@@ -56,7 +56,7 @@ class Workflow(JeevesResource):
                                                         workflow,
                                                         user.tenant_id,
                                                         env,
-                                                        commit=False)
+                                                        commit=True)
         if execute:
             storage.workflows.update(workflow.workflow_id,
                                      status='QUEUED')
