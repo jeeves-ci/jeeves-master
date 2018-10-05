@@ -56,15 +56,19 @@ class Workflow(JeevesResource):
                                                         workflow,
                                                         user.tenant_id,
                                                         env,
-                                                        commit=True)
+                                                        commit=(not execute))
         if execute:
             storage.workflows.update(workflow.workflow_id,
                                      status='QUEUED')
             # queue all workflow tasks.
-            for task_item in tasks:
-                storage.tasks.update(task_item.task_id, status='QUEUED')
-                publisher.send_task_message(task_item.task_id)
-        storage.commit()
+            for task in tasks:
+                storage.tasks.update(task.task_id, status='QUEUED')
+            storage.commit()
+            # publish tasks only after updating their state to avoid
+            # minion race condition.
+            for task in tasks:
+                publisher.send_task_message(task.task_id)
+
         return workflow, 201
 
     @with_storage
