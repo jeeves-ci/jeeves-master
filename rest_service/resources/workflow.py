@@ -1,6 +1,4 @@
 import json
-import uuid
-
 
 from rest_service import responses
 from rest_service.exceptions import (JeevesServerError,
