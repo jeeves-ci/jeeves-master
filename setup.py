@@ -22,7 +22,7 @@ setup(
         'flask==1.0',
         'flask-restful==0.2.5',
         'flask-restful-swagger==0.12',
-        'sqlalchemy==1.1.5',
+        'sqlalchemy==1.2.12',
         'pyyaml==3.13',
         'psycopg2==2.7.1',
         'tornado==4.2',

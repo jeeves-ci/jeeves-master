@@ -52,7 +52,9 @@ services:
     depends_on:
       - "jeeves-master"
     environment:
+      ENV NUM_MINION_WORKERS_ENV: "4"
       MINION_WORKDIR_PATH_ENV: "/tmp/jeeves-minion-work-dir"
+
       POSTGRES_HOST_PORT_ENV: "5432"
       POSTGRES_USERNAME_ENV: "postgres"
       POSTGRES_PASSWORD_ENV: "postgres"
